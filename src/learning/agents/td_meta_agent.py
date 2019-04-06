@@ -1,4 +1,4 @@
-from learning.algorithms.agent import Agent
+from learning.agents.agent import Agent
 
 class TDMetaAgent(Agent):
 

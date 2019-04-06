@@ -1,5 +1,5 @@
 from controllers.train import train
-from learning.algorithms.td_meta_agent import TDMetaAgent
+from learning.agents.td_meta_agent import TDMetaAgent
 from learning.masks.mask_rxcx4 import Mask_rxcx4
 import os
 
