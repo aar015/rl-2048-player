@@ -8,9 +8,12 @@ import os
 def main():
     mask = Mask_rxcx4()
     agent = TDMetaAgent(mask, 0.0025, 0.95, .001)
-    log_File = os.path.join(os.getcwd(),'logs', agent.getTag() + '.csv')
-    train(agent, 10, log_File)
-    gif_file = os.path.join(os.getcwd(), 'games', agent.getTag() + '.gif')
+    log_file = os.path.join(os.getcwd(),'logs', agent.getTag()+'.csv')
+    train(agent, 10, log_file)
+    save_file = os.path.join(os.getcwd(),'agents',agent.getTag()+'.pickle')
+    agent.save(save_file)
+    agent.load(save_file)
+    gif_file = os.path.join(os.getcwd(), 'games', agent.getTag()+'.gif')
     makeGif(agent, gif_file)
 
 
