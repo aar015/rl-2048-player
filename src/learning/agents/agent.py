@@ -1,5 +1,6 @@
 import numpy
 import random
+import pickle
 from game_logic.game import Game
 from abc import ABC, abstractmethod
 
@@ -45,3 +46,13 @@ class Agent(ABC):
 
     def getTag(self):
         return self.name + '_' + self.mask.getTag()
+
+    def save(self, fileName):
+        pickleFile = open(fileName, 'wb')
+        pickle.dump(self.tuples, pickleFile)
+        pickleFile.close()
+
+    def load(self, fileName):
+        pickleFile = open(fileName, 'rb')
+        self.tuples = pickle.load(pickleFile)
+        pickleFile.close()
