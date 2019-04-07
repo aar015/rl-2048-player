@@ -4,13 +4,20 @@ import imageio
 from game_logic.play import play
 
 
-def makeGif(agent, gif_file, board_size=4, graphic_size=750, top_margin=40, seperator_width=12):
-    finalScore, log = play(agent, verbose=True) 
-    images = []
+def makeGif(agent, gif_file, num_trials=10, board_size=4, graphic_size=750, top_margin=40, seperator_width=12):
+    bestFinalScore = 0
+    for i in range(num_trials):
+        finalScore, log = play(agent, verbose=True) 
+        if finalScore > bestFinalScore:
+            bestFinalScore = finalScore
+            bestLog = log
     with imageio.get_writer(gif_file, mode='I') as writer:
-        for i in range(numpy.shape(log)[0]):
-            img=makeImage(log[i][0], log[i][1], board_size, graphic_size,top_margin, seperator_width)
+        for i in range(numpy.shape(bestLog)[0]):
+            img=makeImage(bestLog[i][0], bestLog[i][1], board_size, graphic_size,top_margin, seperator_width)
             writer.append_data(img)
+            if i == numpy.shape(bestLog)[0]-1:
+                for i in range(50):
+                    writer.append_data(img)
 
 def makeImage(score, state, board_size=4, graphic_size=750, top_margin=40, seperator_width=12):
     img = numpy.full((graphic_size + top_margin, graphic_size, 3), 255, numpy.uint8)
