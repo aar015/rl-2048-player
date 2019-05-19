@@ -1,20 +1,31 @@
-from controllers.train import train
-from controllers.make_gif import makeGif
-from learning.agents.td_meta_agent import TDMetaAgent
-from learning.masks.mask_rxcx4 import Mask_rxcx4
+from learning.td_learning import TD0Agent
+from learning.q_learning import QAgent
+from learning.sarsa_learning import SARSAAgent
+from game_logic.mask_rxcx4 import Mask_rxcx4
 import os
 
 
 def main():
     mask = Mask_rxcx4()
-    agent = TDMetaAgent(mask, 0.0025, 0.95, .001)
+    agent = TD0Agent(mask, 0.025, .999, 0.005)
+    doTests(agent)
+    agent = QAgent(mask, 0.025, .99, 0.005)
+    doTests(agent)
+    agent = SARSAAgent(mask, 0.025, .9, 0.005)
+    doTests(agent)
+
+
+def doTests(agent):
     log_file = os.path.join(os.getcwd(),'logs', agent.getTag()+'.csv')
-    train(agent, 10, log_file)
     save_file = os.path.join(os.getcwd(),'agents',agent.getTag()+'.pickle')
-    agent.save(save_file)
-    agent.load(save_file)
     gif_file = os.path.join(os.getcwd(), 'games', agent.getTag()+'.gif')
-    makeGif(agent, gif_file)
+    graph_file = os.path.join(os.getcwd(), 'graphs', agent.getTag()+'.png')
+    # agent.load(save_file)
+    agent.train(2500, log_file, 'w')
+    agent.save(save_file)
+    agent.makeGif(gif_file, graphic_size=200, top_margin=20, seperator_width=6,
+                 num_trials=10)
+    agent.makeGraph(log_file, graph_file, 100)
 
 
 if __name__ == "__main__":

@@ -1,1 +1,1 @@
-'''Package containing all code related to learning algorithms'''
+'''Package containing the Reinforcement Learning algorithms'''

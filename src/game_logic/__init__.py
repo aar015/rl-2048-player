@@ -1,1 +1,1 @@
-'''Package for 2048 Game logic.'''
+'''Package containg masks so learning algorithms can understand the board'''
