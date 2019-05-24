@@ -1,2 +1,12 @@
-# rl-2048-player
-Reinforcement Learning Agent capable of playing 2048
+# Reinforcement Learning to Play 2048
+This project trains agents to play the game 2048 using TD, Q, and SARSA learning agents. 
+
+## Features
+
+## Getting Started
+
+### Installation
+
+### Running Code
+
+## Future Work
