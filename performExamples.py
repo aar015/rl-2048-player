@@ -1,4 +1,10 @@
 import rl2048player as rl
 
-if __name__ == "__main__":
+
+def run():
    rl.examples.example1() 
+   rl.examples.example2()
+
+
+if __name__ == "__main__":
+    run()

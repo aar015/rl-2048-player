@@ -25,3 +25,18 @@ def example1(q_gif_file='example_output/example1/QGame.gif',
     sarsaagent.makeGraph(scores=sarsacores, rollingWindow=200)
     plt.legend()
     plt.savefig(graph_file)
+
+
+def example2(save_file='example_output/example2/agent.pickle',
+             log_file='example_output/example2/log.csv',
+             graph1_file='example_output/example2/graph1.png',
+             graph2_file='example_output/example2/graph2.png'):
+    mask = Mask_rxcx4()
+    agent = TD0Agent(mask)
+    scores = agent.train(2500, log_file)
+    agent.makeGraph(scores=scores, graphFile=graph1_file, rollingWindow=100)
+    agent.save(save_file)
+    agent.load(save_file)
+    agent.train(2500, log_file, 'a')
+    agent.makeGraph(logFile=log_file, graphFile=graph2_file, rollingWindow=100)
+    agent.save(save_file)
