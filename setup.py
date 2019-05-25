@@ -1,4 +1,4 @@
-from setuptools import setup
+import setuptools
 
 
 def readme():
@@ -6,21 +6,25 @@ def readme():
         return f.read()
 
 
-setup(name='rl2048player',
-      version='1.0',
-      description='Reinforcement Learning Agent capble of playing 2048',
-      long_description=readme(),
-      url='https://github.com/aar015/rl-2048-player',
-      author='aar015',
-      packages=['rl2048player'],
-      install_requires=[
-          'imageio',
-          'matplotlib',
-          'numpy'
-      ],
-      classifiers=[
-          'Programming Language :: Python :: 3.6'
-      ],
-      keywords='2048 RL',
-      include_package_data=True,
-      zip_safe=False)
+setuptools.setup(
+    name='rl2048player',
+    version='0.0.1',
+    author='aar015',
+    author_email='avirlincoln@gmail.com',
+    description='Reinforcement Learning Agent capble of playing 2048',
+    long_description=readme(),
+    long_description_content_type='text/markdown',
+    url='https://github.com/aar015/rl-2048-player',
+    packages=setuptools.find_packages(),
+    install_requires=[
+        'imageio',
+        'matplotlib',
+        'numpy'
+    ],
+    classifiers=[
+        'Programming Language :: Python :: 3.6',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent'
+    ],
+    keywords='2048 RL'
+    )
