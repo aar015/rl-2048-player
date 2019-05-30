@@ -13,8 +13,9 @@ Now, I will review some of the main features of this package. For most of these 
 
 ### Masks
 Pefore creating a learning agent, you must initialize a mask. Masks translate between the game board and the learning agent. This allows you to change the way the agent understands the game board without changing the agent itself. Currently, only one mask has been implemented. This mask breaks down the board into rows, columns, and 2x2 squares. This has the effect of  decoupling parts of the board that do not interact strongly with each other. The mask can be initialized using the code
-
-```mask = rl.masks.Mask_rxcx4()```
+```
+mask = rl.masks.Mask_rxcx4()
+```
 
 ### Agents
 Once the mask has been initialized, you can initialize the agents. Currently, there are three agents that have been implemented: one using a Q learning algorithm, one using a SARSA learning algorithm, and one using a TD0 learning algorithm. These agents can be initialized by
