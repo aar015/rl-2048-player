@@ -23,9 +23,11 @@ class Game(object):
           state: Shape (boardSize, boardSize) numpy array to initialize the state with. If None
               the state will be initialized with with two random tiles (as done
               in the original game).
-          initial_score: Score to initialize the Game with."""
+          initial_score: Score to initialize the Game with.
+          boardSize: Game board is of size boardSize X boardSize"""
         self._score = initial_score
         self.boardSize = boardSize
+        # If state is none add two random tiles
         if state is None:
             self._state = numpy.zeros((boardSize, boardSize), dtype=numpy.int)
             self.add_random_tile()
@@ -38,7 +40,7 @@ class Game(object):
         return Game(numpy.copy(self._state), self._score)
 
     def game_over(self):
-        """Whether the game is over."""
+        """Return true if game is over"""
         for action in range(4):
             if self.is_action_available(action):
                 return False
@@ -70,7 +72,7 @@ class Game(object):
         return False
 
     def do_action(self, action):
-        """Execute action, add a new tile, update the score & return the reward."""
+        """Execute action, update the score, and return the reward."""
         temp_state = numpy.rot90(self._state, action)
         reward = self._do_action_left(temp_state)
         self._state = numpy.rot90(temp_state, -action)
