@@ -1,0 +1,10 @@
+{
+	"mask" : "rxcx4",
+	"board_size" : "5",
+	"max_tile" : "15",
+	"agent_type" : "TD0Agent",
+	"learning_rate" : "0.025",
+	"discount_factor" : "0.9999",
+	"exploration_rate" : "0.0001",
+	"num_iterations" : "100"
+}

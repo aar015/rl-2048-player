@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+
+
+# Trains a reinforcement learning 2048 agent.
+
+
+import os
+import json
+import sys
+import traceback
+import rl2048player as rl
+
+
+# These are the paths to where SageMaker mounts interesting things in your container.
+prefix = '/opt/ml/'
+output_path = os.path.join(prefix, 'output')
+model_path = os.path.join(prefix, 'model')
+param_path = os.path.join(prefix, 'input/config/hyperparameters.json')
+
+
+# The function to execute the training.
+def train():
+    print('Starting the training.')
+    try:
+        # Read in any hyperparameters that the user passed with the training job
+        with open(param_path, 'r') as tc:
+            trainingParams = json.load(tc)
+
+        # Hyperparameters are passed in as strings, so need to do conversions.
+        mask_type = trainingParams.get('mask', None)
+        if mask_type is None:
+            mask_type = 'rxcx4'
+        board_size = trainingParams.get('board_size', None)
+        if board_size is None:
+            board_size = 4
+        else:
+            board_size = int(board_size)
+        max_tile = trainingParams.get('max_tile', None)
+        if max_tile is None:
+            max_tile = 15
+        else:
+            max_tile = int(max_tile)
+        agent_type = trainingParams.get('agent', None)
+        if agent_type is None:
+            agent_type = 'QAgent'
+        learning_rate = trainingParams.get('learning_rate', None)
+        if learning_rate is None:
+            learning_rate = 0.025
+        else:
+            learning_rate = float(learning_rate)
+        discount_factor = trainingParams.get('discount_factor', None)
+        if discount_factor is None:
+            discount_factor = 0.9999
+        else:
+            discount_factor = float(discount_factor)
+        exploration_rate = trainingParams.get('exploration_rate', None)
+        if exploration_rate is None:
+            exploration_rate = 0.0001
+        else:
+            exploration_rate = float(exploration_rate)
+        num_iterations = trainingParams.get('num_iterations', None)
+        if num_iterations is None:
+            num_iterations = 1000
+        else:
+            num_iterations = int(num_iterations)
+
+        # Initialize the agent
+        if mask_type == 'rxcx4':
+            mask = rl.masks.Mask_rxcx4(boardSize=board_size, maxTile=max_tile)
+        else:
+            raise Exception('Mask Type %s not found.'%mask_type)
+        if agent_type == 'QAgent':
+            agent = rl.agents.QAgent(mask, a=learning_rate, g=discount_factor, e=exploration_rate)
+        elif agent_type == 'SARSAAgent':
+            agent = rl.agents.SARSAAgent(mask, a=learning_rate, g=discount_factor, e=exploration_rate)
+        elif agent_type == 'TD0Agent':
+            agent = rl.agents.TD0Agent(mask, a=learning_rate, g=discount_factor, e=exploration_rate)
+        else:
+            raise Exception('Agent Type %s not found.'%agent_type)
+
+        # Train the agent
+        log = agent.train(numIterations=num_iterations)
+
+        # save the model
+        save_model_path = os.path.join(model_path, 'agent.pkl')
+        save_log_path = os.path.join(model_path, 'log.json')
+        agent.save(save_model_path)
+        with open(save_log_path, 'w') as fp:
+            json.dump(log.tolist(), fp)
+        print('Training complete.')
+
+    except Exception as e:
+        # Write out an error file. This will be returned as the failureReason in the
+        # DescribeTrainingJob result.
+        trc = traceback.format_exc()
+        with open(os.path.join(output_path, 'failure'), 'w') as s:
+            s.write('Exception during training: ' + str(e) + '\n' + trc)
+        # Printing this causes the exception to be in the training job logs, as well.
+        print('Exception during training: ' + str(e) + '\n' + trc, file=sys.stderr)
+        # A non-zero exit code causes the training job to be marked as Failed.
+        sys.exit(255)
+
+if __name__ == '__main__':
+    train()
+    # A zero exit code causes the job to be marked a Succeeded.
+    sys.exit(0)
